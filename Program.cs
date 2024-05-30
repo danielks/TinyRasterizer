@@ -1,5 +1,6 @@
 ﻿using Raylib_cs;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Drawing;
@@ -75,9 +76,11 @@ void render()
 {
     frameBuffer.Clear();
 
-    
+    frameBuffer.Line(13, 20, 80, 40, Raylib_cs.Color.White);
+    frameBuffer.Line(20, 13, 40, 80, Raylib_cs.Color.Red);
+    frameBuffer.Line(80, 40, 13, 20, Raylib_cs.Color.Red);
 
-    
+
 
     Raylib_cs.Image i2 = new Raylib_cs.Image
     {
@@ -88,6 +91,7 @@ void render()
     };
 
     Texture2D t2 = Raylib.LoadTextureFromImage(i2);
+    
 
     unsafe
     {
