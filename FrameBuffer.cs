@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TinyRasterizer;
 
-namespace TinyRaycaster
+namespace TinyRasterizer
 {
     internal class FrameBuffer
     {
@@ -59,38 +59,27 @@ namespace TinyRaycaster
 
         public void Line(int x0, int y0, int x1, int y1, Raylib_cs.Color color)
         {
-            //the author of the article made a number of optimizations to this function, which I did no implement.
 
-            bool steep = false;
+            int dx = Math.Abs(x1 - x0);
+            int dy = Math.Abs(y1 - y0);
+            int sx = x0 < x1 ? 1 : -1;
+            int sy = y0 < y1 ? 1 : -1;
+            int err = dx - dy;
 
-            if (Math.Abs(x0 - x1) < Math.Abs(y0 - y1)) // if the line is steep, we transpose the image 
+            while (x0 != x1 || y0 != y1)
             {
-                (x0, y0) = (y0, x0);
-                (x1, y1) = (y1, x1);
+                SetPixel(x0, y0, color);
 
-                
-                steep = true;
-            }
-
-            if (x0 > x1)
-            { // make it left−to−right 
-                (x0, x1) = (x1, x0);
-                (y0, y1) = (y1, y0);
-            }
-
-            for (int x = x0; x <= x1; x++)
-            {
-                float t = (x - x0) / (float)(x1 - x0);
-
-                int y =  Util.float_to_int(y0 * (1.0f - t) + y1 * t);
-
-                if (steep)
+                int err2 = 2 * err;
+                if (err2 > -dy)
                 {
-                    SetPixel(y, x, color); // if transposed, de−transpose 
+                    err -= dy;
+                    x0 += sx;
                 }
-                else
+                if (err2 < dx)
                 {
-                    SetPixel(x, y, color);
+                    err += dx;
+                    y0 += sy;
                 }
             }
         }
