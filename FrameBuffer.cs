@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using TinyRasterizer;
@@ -82,6 +83,29 @@ namespace TinyRasterizer
                     y0 += sy;
                 }
             }
+        }
+
+        internal void FillTriangle(Vector3[] triangle, Raylib_cs.Color color)
+        {
+            var box = Util.BoundingBox(triangle);
+
+            var minX = Util.float_to_int(box.Min(v => v.X));
+            var minY = Util.float_to_int(box.Min(v => v.Y));
+            var maxX = Util.float_to_int(box.Max(v => v.X));
+            var maxY = Util.float_to_int(box.Max(v => v.Y));
+
+            for (int x = minX; x < maxX; x++)
+            {
+                for (int y = minY; y < maxY; y++)
+                {
+                    if (Util.IsPointInside(new Vector2(x, y), triangle))
+                    {
+                        SetPixel(x, y, color);
+                    }
+                }
+            }
+
+
         }
     }
 }
